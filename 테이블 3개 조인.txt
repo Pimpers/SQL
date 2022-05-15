@@ -1,0 +1,54 @@
+create table TBL_JUMIN_202108 (
+jumin char (14) NOT NULL,
+pnname varchar2 (16),
+tel         varchar2 (13),
+address  varchar2 (10),
+PRIMARY KEY (JUMIN)
+);
+
+insert into TBL_JUMIN_202108 
+values('710101-1000001','김주민','010-1234-0001','서울');
+
+create table TBL_HOSP_202108
+hospcode char (4) NOT NULL,
+hospname varchar2 (10),
+HOSPADDR varchar2 (10)
+HOSPtel  varchar2 (10)
+PRIMARY KEY (JUMIN)
+);
+insert  into TBL_HOSP_202108
+values ('h001','가병원','1588-0001','서울');
+
+create table TBL_VACCRESV_202108
+
+
+
+resvno char (8) NOT NULL,
+jumin char (10),
+vcode char(10)
+HOSPCODE  char (10)
+RESVDATE cahr (8)
+RESVTIME char(4)
+PRIMARY KEY (JUMIN)
+);
+	
+select a.JUMIN as 주민번호, 
+b.HOSPADDR as 병원주소, 
+b.HOSPNAME as 병원명
+FROM TBL_JUMIN_202108 a 
+inner join TBL_HOSP_202108 b
+on a.ADDRESS= b.HOSPADDR;
+
+
+select 
+a.PNNAME as 이름, 
+a.JUMIN as 주민번호, 
+c.VCODE as 백신코드,
+b.HOSPNAME as 병원이름,
+b.HOSPADDR as 병원주소
+
+FROM TBL_JUMIN_202108 a 
+inner join TBL_HOSP_202108 b
+on a.ADDRESS= b.HOSPADDR
+inner join TBL_VACCRESV_202108 c
+on a.JUMIN =c.JUMIN;

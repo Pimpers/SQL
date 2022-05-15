@@ -1,0 +1,61 @@
+insert into TBL_IAB_TEST_202004 values 
+("T001","결핵"),
+("T002","장티푸스"),
+("T003","수두"),
+("T004","홍역"),
+("T005","콜레라");
+
+
+SELECT p_no as 환자코드, p_name  as환자이름,  p_city as 환자거주지,
+substr(p_birth,1,4)||'년'||substr(p_birth,5,2)||'월'||substr(p_birth,7,2)||'일' '환자 생년월일',
+substr(p_tel1,1,3)||'-'||substr(p_tel2,1,4)||'-'||substr(p_tel3,1,4) '환자전화번호',
+case p_gender
+ when 'M' then '남'
+ when 'F' then '여자'
+end '환자성별',
+
+case p_city
+ when '10' then '서울'
+ when '20' then '경기'
+ when '30' then '강원'
+ when '40' then '대구'
+end '환자거주지'
+
+from TBBL_PATENT_202004
+
+select c.p_no 환자코드, a.p_name 환자이름, b.t_name
+검사명,substr(c.t_sdate,0,4)||'-'||substr(c.t_sdate,5,2)||'-'||substr
+(c.t_sdate,7,2) 환자전화번호,
+case c.t_status
+when '1' then '검사중'
+when '2' then '검사완료'
+end '검사상태',
+(substr(c.t_ldate,1,4)||'-'||substr(c.t_ldate,5,2)||'-'||substr(c.t_ldate,7,2)) '검사 완료일',
+case c.t_result
+when'X' then '미입력'
+when 'P' then '양성'
+when 'N' then '음성'
+end '검사결과'
+from tbl_result_202004 c
+inner join TBBL_PATENT_202004 a on c.p_no = a.p_no
+inner join TBL_IAB_TEST_202004	 b on c.t_code = b.t_code
+order by 환자코드;
+
+
+select c.p_city 지역코드, 
+case p_city
+ when '10' then '서울'
+ when '20' then '경기'
+ when '30' then '강원'
+ when '40' then '대구'
+ else '지정안됨'
+end '지역명',
+count(c.p_city)'검사 전수'
+from tbl_result_202004 c
+inner join   TBBL_PATENT_202004 a
+on c.p_no = a.p_no
+inner join TBL_IAB_TEST_202004	 b
+on c.t_code = b.t_code
+group by c.p_city
+order by c.p_city;
+

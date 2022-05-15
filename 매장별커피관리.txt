@@ -1,0 +1,76 @@
+create table tbl_product_01(
+pcode varchar2(10) NOT NULL Primary KEY,
+name varchar2(20),
+cost number(10)
+);
+
+
+
+insert into tbl_shop_01 values 
+('S001', '강남점'),
+('S002', '강서점'),
+('S003', '강동점'),
+('S004', '강북점'),
+('S005', '동대문점'),
+('S006', '인천점');
+
+
+
+create table tbl_product_01(
+pcode varchar2(10) NOT NULL Primary KEY,
+name varchar2(20),
+cost number(10)
+);
+
+
+
+insert into tbl_product_01 values
+('AA01','아메리카노',3000),
+('AA02','에스프레소',3500,
+('AA03','카페라떼',4000),
+('AA04','카라멜마끼',4500),
+('AA05','카푸치노',5000),
+('AA06','초코롤케익',6000),
+('AA07','녹차롤케익',6500),
+('AA08','망고쥬스',7000),
+('AA09','핫초코',2500);
+
+
+
+create table tbl_salelist_01(
+saleno number(10) NOT NULL Primary KEY,
+pcode varchar2(10) NOT NULL,
+saledate date,
+scode varchar2(10) NOT NULL,
+amount number(10)
+);
+
+
+
+insert into tbl_salelist_01 values (100001, 'AA01', '20180902', 'S001', 50);
+
+
+
+- 상품별 판매액
+select a.pcode as 상품코드, a.name as 상품명, sum(a.cost * b.amount) as '상품별 판매액'
+from tbl_product_01 a join tbl_salelist_01 b
+on b.pcode = a.pcode
+GROUP BY a.pcode, a.name
+ORDER BY a.pcode ASC;
+
+
+
+- 매장별 판매액
+select a1.scode as 매장코드, b1.sname as 매장명, a1.'매장별 판매액' from(select a.scode, SUM(b.cost * a.amount) as '매장별 판매액'
+from tbl_salelist_01 a join tbl_product_01 b
+on a.pcode = b.pcode
+GROUP BY a.scode)a1 join tbl_shop_01 b1
+on a1.scode = b1.scode;
+
+
+
+- 판매현황
+select a.saleno as 판매번호, a.pcode as 상품코드, a.saledate as 판매날짜, a.scode as 매장코드,
+b.name 상품명, a.amount as 판매수량, (b.cost * a.amount) as 총판매액
+from tbl_salelist_01 a join tbl_product_01 b
+on a.pcode = b.pcode;	
